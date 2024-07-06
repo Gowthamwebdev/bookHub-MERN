@@ -5,47 +5,50 @@ import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 
 const UpdateBook = () => {
-  const [title, setTitle] = useState();
-  const [author, setAuthor] = useState();
-  const [pbYear, setPbYear] = useState();
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [pbYear, setPbYear] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const handleEditOperation = () => {
-    useEffect(() => {
-      setLoading(true);
-      axios;
-      get(`http://localhost:5000:books/${id}`)
-        .then((res) => {
-          setTitle(res.data.title);
-          setAuthor(res.data.author);
-          setPbYear(res.data.pbYear);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert("An error occured ");
-        });
-    }, []);
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`http://localhost:5000/books/${id}`)
+      .then((res) => {
+        setTitle(res.data.title);
+        setAuthor(res.data.author);
+        setPbYear(res.data.publishedYear.toString());
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("An error occurred while fetching book details");
+        setLoading(false);
+      });
+  }, [id]);
 
+  const handleEditOperation = () => {
     const data = {
       title,
       author,
-      pbYear,
+      publishedYear: pbYear,
     };
     setLoading(true);
     axios
-      .put(`http://localhost:5000:books/${id}`, data)
+      .put(`http://localhost:5000/books/${id}`, data)
       .then(() => {
         setLoading(false);
         navigate("/");
       })
       .catch((error) => {
         console.log(error);
-        alert("An error occured ");
+        alert("An error occurred while updating the book");
+        setLoading(false);
       });
   };
+
   return (
     <div>
       {loading ? <Loader /> : ""}
@@ -53,7 +56,7 @@ const UpdateBook = () => {
         <BackButton />
         <h2>Enter book details</h2>
         <label className="text-2xl text-slate-600 font-serif font-bold">
-          Book Name :{" "}
+          Book Name :
         </label>
         <input
           type="text"
@@ -63,7 +66,7 @@ const UpdateBook = () => {
         />
 
         <label className="text-2xl text-slate-600 font-serif font-bold">
-          Author Name :{" "}
+          Author Name :
         </label>
         <input
           type="text"
@@ -72,7 +75,7 @@ const UpdateBook = () => {
           className="border-2 border-gray-500 px-4 py-2 mx-auto"
         />
         <label className="text-2xl text-slate-600 font-serif font-bold">
-          Published Year :{" "}
+          Published Year :
         </label>
         <input
           type="text"

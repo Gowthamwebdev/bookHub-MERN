@@ -70,7 +70,7 @@ const Home = () => {
                       <Link to={`books/details/${book._id}`}>
                         <BsInfoCircle className="text-xl text-green-800" />{" "}
                       </Link>
-                      <Link to={`books/edit/${book._id}`}>
+                      <Link to={`books/update/${book._id}`}>
                         <AiOutlineEdit className="text-xl text-yellow-600" />{" "}
                       </Link>
                       <Link to={`books/delete/${book._id}`}>
