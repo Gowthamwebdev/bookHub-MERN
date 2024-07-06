@@ -13,9 +13,8 @@ const Home = () => {
   const getData = async () => {
     try {
       setLoading(true);
-      const response = await axios
-        .get("http://localhost:5000/books")
-        .then(setBooks(response.data.data));
+      const response = await axios.get("http://localhost:5000/books");
+      setBooks(response.data.data);
       setLoading(false);
     } catch (error) {
       console.error(error);

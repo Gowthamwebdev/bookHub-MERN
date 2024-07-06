@@ -43,6 +43,20 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.post("/bulk", async (req, res) => {
+  const books = req.body;
+  try {
+    if (!Array.isArray(books)) {
+      throw new Error("Data should be an array of books");
+    }
+
+    const newBooks = await Book.insertMany(books);
+    res.status(201).json(newBooks);
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+});
+
 router.put("/:id", async (req, res) => {
   try {
     const { title, author, publishedYear } = req.body;
