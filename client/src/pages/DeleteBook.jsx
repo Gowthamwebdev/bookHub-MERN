@@ -26,8 +26,8 @@ const DeleteBook = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="flex flex-col items-center border-2 border-sky-400 rounded-xl">
-          <p>Are you sure want to delete this book!</p>
+        <div className="flex flex-col items-center relative justify-center ">
+          <p className="my-6">Are you sure want to delete this book!</p>
           <button className="bg-teal-500 w-36 h-12" onClick={handleDelete}>
             yes, delete it
           </button>

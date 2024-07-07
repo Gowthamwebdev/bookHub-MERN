@@ -1,85 +1,76 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import BackButton from "../components/BackButton";
-import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
+import { Link } from "react-router-dom";
+import { AiOutlineEdit } from "react-icons/ai";
+import { BsInfoCircle, BsTrash } from "react-icons/bs";
+import { MdOutlineAddBox } from "react-icons/md";
 
-const CreateBook = () => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [publishedYear, setPublishedYear] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+const Home = () => {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleCreateOperation = () => {
-    if (!title || !author || !publishedYear) {
-      alert("All fields are required");
-      return;
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:5000/books");
+      setBooks(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
     }
-
-    const data = {
-      title,
-      author,
-      publishedYear,
-    };
-
-    setLoading(true);
-    axios
-      .post("http://localhost:5000/books/", data)
-      .then(() => {
-        setLoading(false);
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("An error occurred");
-        setLoading(false);
-      });
   };
 
-  return (
-    <div>
-      {loading ? <Loader /> : ""}
-      <div>
-        <BackButton />
-        <h2>Enter book details</h2>
-        <label className="text-2xl text-slate-600 font-serif font-bold">
-          Book Name:{" "}
-        </label>
-        <input
-          type="text"
-          value={title || ""}
-          onChange={(e) => setTitle(e.target.value)}
-          className="border-2 border-gray-500 px-4 py-2 mx-auto"
-        />
+  useEffect(() => {
+    getData();
+  }, []);
 
-        <label className="text-2xl text-slate-600 font-serif font-bold">
-          Author Name:{" "}
-        </label>
-        <input
-          type="text"
-          value={author || ""}
-          onChange={(e) => setAuthor(e.target.value)}
-          className="border-2 border-gray-500 px-4 py-2 mx-auto"
-        />
-        <label className="text-2xl text-slate-600 font-serif font-bold">
-          Published Year:{" "}
-        </label>
-        <input
-          type="text"
-          value={publishedYear || ""}
-          onChange={(e) => setPublishedYear(e.target.value)}
-          className="border-2 border-gray-500 px-4 py-2 mx-auto"
-        />
-        <button
-          className="font-mono font-bold text-center text-teal-300 w-20 h-20 rounded-sm"
-          onClick={handleCreateOperation}
-        >
-          Done
-        </button>
+  return (
+    <div className="p-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl my-8">Book List</h1>
+        <Link to="/books/create">
+          <MdOutlineAddBox className="bg-sky-400 text-4xl" /> Add Book
+        </Link>
       </div>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.isArray(books) && books.length > 0 ? (
+            books.map((book, index) => (
+              <div
+                key={book._id}
+                className="border border-slate-600 rounded-md p-4 flex flex-col justify-between"
+              >
+                <div>
+                  <h2 className="text-xl font-bold">{book.title}</h2>
+                  <p className="text-gray-700">Author: {book.author}</p>
+                  <p className="text-gray-700">
+                    Published Year: {book.publishedYear}
+                  </p>
+                </div>
+                <div className="flex justify-between mt-4">
+                  <Link to={`books/details/${book._id}`}>
+                    <BsInfoCircle className="text-xl text-green-800" />
+                  </Link>
+                  <Link to={`books/update/${book._id}`}>
+                    <AiOutlineEdit className="text-xl text-yellow-600" />
+                  </Link>
+                  <Link to={`books/delete/${book._id}`}>
+                    <BsTrash className="text-xl text-red-600" />
+                  </Link>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center col-span-full">No books available.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-export default CreateBook;
+export default Home;
