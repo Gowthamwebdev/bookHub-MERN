@@ -1,8 +1,10 @@
 import express, { urlencoded, json } from "express";
-import { PORT, mongoDbURL } from "./config.js";
+import { PORT, mongoDbURL } from "./config/config.js";
 import mongoose from "mongoose";
 import bookRoutes from "./routes/bookRoutes.js";
 import cors from "cors";
+import loginRoutes from "./routes/loginRoutes.js";
+import signupRoutes from "./routes/signupRoutes.js";
 
 const app = express();
 
@@ -21,6 +23,8 @@ app.use(json());
 
 // Routes
 app.use("/books", bookRoutes);
+app.use("/login", loginRoutes);
+app.use("/signup", signupRoutes);
 
 mongoose
   .connect(mongoDbURL)
