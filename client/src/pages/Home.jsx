@@ -3,7 +3,7 @@ import axios from "axios";
 import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
 import { MdOutlineAddBox } from "react-icons/md";
-import DisplayBook from "../components/renders/DisplayBook";
+import DisplayBook from "../components/DisplayBook";
 
 const Home = () => {
   const [books, setBooks] = useState([]);
