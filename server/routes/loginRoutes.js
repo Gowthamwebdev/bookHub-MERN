@@ -1,20 +1,23 @@
 import express from "express";
+import bcrypt from "bcrypt";
+import { SignupModel } from "./signupRoutes";
 
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ error: "Username and password are required" });
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
   }
 
   try {
-    const user = await Login.findOne({ username });
+    const user = await SignupModel.findOne({ email });
     if (user) {
       const isMatch = await bcrypt.compare(password, user.password);
-      if (isMatch || (username === "admin" && password === "password")) {
+      if (
+        isMatch ||
+        (email === "admin@example.com" && password === "password")
+      ) {
         res.status(200).json({ message: "Login successful" });
       } else {
         res.status(401).json({ error: "Invalid credentials" });

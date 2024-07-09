@@ -1,6 +1,5 @@
 import express from "express";
 import { Book } from "../models/bookModel.js";
-
 const router = express.Router();
 // to get list of books
 router.get("/", async (req, res) => {

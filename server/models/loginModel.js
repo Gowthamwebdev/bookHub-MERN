@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 // Connect to MongoDB
 
-const LoginSchema = new Mongoose.Schema(
+const LoginSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -19,4 +19,4 @@ const LoginSchema = new Mongoose.Schema(
   }
 );
 
-export const Login = mongoose.model("loginauth", LoginSchema);
+export const LoginModel = mongoose.model("loginauth", LoginSchema);
